@@ -1,0 +1,28 @@
+{
+  "name": "red-contrib-backblaze-b2",
+  "version": "1.0.0",
+  "description": "A Node-RED node to watch, save and retreive files from an Backblaze B2 bucket",
+  "node-red": {
+    "nodes": {
+      "backblaze b2": "b2.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/S-Flex/red-contrib-backblaze-b2.git"
+  },
+  "keywords": [
+    "node-red",
+    "backblaze",
+    "b2"
+  ],
+  "author": "Alex Spelt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/S-Flex/red-contrib-backblaze-b2/issues"
+  },
+  "homepage": "https://github.com/S-Flex/red-contrib-backblaze-b2#readme",
+  "dependencies": {
+    "backblaze-b2": "^1.7.0"
+  }
+}

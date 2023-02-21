@@ -1,0 +1,270 @@
+
+<!-- Backblaze b2 CONFIG -->
+<script type="text/x-red" data-template-name="backblaze-config-b2">
+    <div class="form-row">
+        <label for="node-config-input-accesskeyid"><i class="fa fa-bookmark"></i><span data-i18n="b2.label.keyid"></span></label>
+        <input class="input-append-left" type="text" id="node-config-input-accesskeyid" style="width: 40%;" >
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-secretaccesskey"><i class="fa fa-bookmark"></i><span data-i18n="b2.label.secret"></span></label>
+        <input class="input-append-left" type="password" id="node-config-input-secretaccesskey" style="width: 40%;" >
+    </div>
+    <div class="form-tips">
+        <span data-i18n="[html]b2.tip.config1"></span>
+        <span data-i18n="[html]b2.tip.config2"></span>
+    </div>
+</script>
+<script type="text/javascript">
+    (function() {
+        RED.nodes.registerType('backblaze-config-b2',{
+            category: 'config',
+            defaults: { },
+            credentials: {
+                accesskeyid: {type:"text",required:true},
+                secretaccesskey: {type: "password",required:true},
+            },
+            label: function() {
+                return this.accesskeyid ? "b2 "+this.accesskeyid : "b2";
+            },
+            exportable: false,
+        });
+    })();
+</script>
+
+<!-- Backblaze b2 IN -->
+<script type="text/x-red" data-template-name="Backblaze b2 in">
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i>
+            <span data-i18n="b2.label.name"></span>
+        </label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]b2.placeholder.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-b2">
+            <i class="fa fa-user"></i> 
+            <span data-i18n="b2.label.b2"></span>
+        </label>
+        <input type="text" id="node-input-b2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bucket">
+            <i class="fa fa-folder"></i> 
+            <span data-i18n="b2.label.bucket"></span>
+        </label>
+        <input type="text" id="node-input-bucket" data-i18n="[placeholder]b2.placeholder.bucket">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="Backblaze b2 in">
+    <p>Backblaze b2 watch node. Watches for file events on Box. By default all
+    file events are reported, but the filename pattern can be supplied
+    to limit the events to files which have full filenames that match
+    the glob pattern. The event messages consist of the full filename
+    in <b>msg.payload</b> property, the filename in <b>msg.file</b>,
+    the event type in <b>msg.event</b>.</p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('Backblaze b2 in',{
+        category: 'storage-input',
+        color:"#e52d49",
+        defaults: {
+            b2: {type:"backblaze-b2-config",required:true},
+            bucket: {required:true},
+            contentType: {value:""},
+            name: {value:""},
+        },
+        inputs:0,
+        outputs:1,
+        icon: "Backblaze.png",
+        label: function() { 
+            return this.name ? this.name : this.bucket ? "b3 "+this.bucket : "b3";
+        }
+    });
+</script>
+
+<!-- Backblaze b2 GET -->
+<script type="text/x-red" data-template-name="Backblaze b2 get">
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i> 
+            <span data-i18n="b2.label.name"></span>
+        </label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]b2.placeholder.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-b2">
+            <i class="fa fa-user"></i> 
+            <span data-i18n="b2.label.b2"></span>
+        </label>
+        <input type="text" id="node-input-b2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bucket">
+            <i class="fa fa-folder"></i> 
+            <span data-i18n="b2.label.bucket"></span>
+        </label>
+        <input type="text" id="node-input-bucket" data-i18n="[placeholder]b2.placeholder.bucket">
+    </div>
+    <div class="form-row node-input-filename">
+         <label for="node-input-filename">
+            <i class="fa fa-file"></i> 
+            <span data-i18n="b2.label.filename"></span>
+        </label>
+         <input type="text" id="node-input-filename" data-i18n="[placeholder]b2.placeholder.filename">
+    </div>
+    <div class="form-row">
+        <label for="node-input-format">
+            <i class="fa fa-sign-out"></i> 
+            <span data-i18n="b2.label.outputas"></span>
+        </label>
+        <select id="node-input-format">
+            <option value="utf8" data-i18n="b2.label.utf8"></option>
+            <option value="" data-i18n="b2.label.buffer"></option>
+        </select>
+    </div>
+</script>
+<script type="text/x-red" data-help-name="Backblaze b2 get">
+    <p>
+        Backblaze b2 input node. Downloads content from an Backblaze b2 bucket. 
+        The bucket name can be specified in the node <b>bucket</b> property or in the <b>msg.bucket</b> property. 
+        The name of the file to download is taken from the node <b>filename</b> property or the <b>msg.filename</b> property. 
+        The downloaded content is sent as <b>msg.payload</b> property. 
+        The downloaded content is sent as <b>msg.payload</b> property. 
+        If the download fails <b>msg.error</b> will contain an error object.
+    </p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('Backblaze b2 get',{
+        category: 'storage-output',
+        color:"#e52d49",
+        defaults: {
+            b2: {type:"backblaze-b2-config",required:true},
+            bucket: {required:true},
+            filename: {value:""},
+            name: {value:""},
+            format: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "Backblaze.png",
+        align: "right",
+        label: function() { 
+            return this.name ? this.name : this.bucket ? "b2 "+this.bucket : "b2";
+        }
+    });
+</script>
+
+<!-- Backblaze b2 PUT -->
+<script type="text/x-red" data-template-name="Backblaze b2 put">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="b2.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]aws.placeholder.name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-b2"><i class="fa fa-user"></i> <span data-i18n="b2.label.b2"></span></label>
+        <input type="text" id="node-input-b2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-bucket"><i class="fa fa-folder"></i> <span data-i18n="b2.label.bucket"></span></label>
+        <input type="text" id="node-input-bucket" data-i18n="[placeholder]b2.placeholder.bucket">
+    </div>
+    <div class="form-row node-input-filename">
+         <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="b2.label.filename"></span></label>
+         <input type="text" id="node-input-filename" data-i18n="[placeholder]b2.placeholder.filename">
+    </div>
+    <div class="form-row node-input-localFilename">
+         <label for="node-input-localFilename"><i class="fa fa-file"></i> <span data-i18n="b2.label.local"></span></label>
+         <input type="text" id="node-input-localFilename" data-i18n="[placeholder]b2.placeholder.local">
+    </div>
+    <div class="form-row">
+        <label for="node-input-acl"><i class="fa fa-tag"></i> <span data-i18n="b2.label.acl"></span></label>
+        <select type="text" id="node-input-acl" style="width:72%;">
+            <option selected value="private">private</option>
+            <option value="public-read">public-read</option>
+            <option value="public-read-write">public-read-write</option>
+            <option value="b2-exec-read">b2-exec-read</option>
+            <option value="authenticated-read">authenticated-read</option>
+            <option value="bucket-owner-read">bucket-owner-read</option>
+            <option value="bucket-owner-full-control">bucket-owner-full-control</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-contentType"><i class="fa fa-tag"></i> <span data-i18n="b2.label.contentType"></span></label>
+        <select type="text" id="node-input-contentType" style="width:72%;">
+            <option selected value="">Select</option>
+            <option value="image/jpeg">image/jpeg</option>
+            <option value="image/png">image/png</option>
+            <option value="application/pdf">application/pdf</option>
+            <option value="image/gif">image/gif</option>
+            <option value="application/json">application/json</option>
+            <option value="application/xml">application/xml</option>
+            <option value="application/javascript">application/javascript</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-contentEncoding"><i class="fa fa-tag"></i> <span data-i18n="b2.label.contentEncoding"></span></label>
+        <input type="text" id="node-input-contentEncoding">
+    </div>
+    <div class="form-row">
+        <label for="node-input-isBase64"><i class="fa fa-tag"></i> <span data-i18n="b2.label.isBase64"></span></label>
+        <input type="checkbox" style="width: 15px" id="node-input-isBase64">
+    </div>
+    <div class="form-row">
+        <label for="node-input-outputs"><i class="fa fa-random"></i> <span>Outputs</span></label>
+        <input id="node-input-outputs" style="width: 60px;" value="1">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="Backblaze b2 put">
+    <p>
+        Backblaze b2 put node. Uploads content to an Backblaze b2 bucket. 
+        The bucket name can be specified in the node <b>bucket</b> property or in the <b>msg.bucket</b> property. 
+        The filename on Backblaze b2 is taken from the node <b>filename</b> property or the <b>msg.filename</b> property. 
+        The content is taken from either the node <b>localFilename</b> property, the <b>msg.localFilename</b> property or the <b>msg.payload</b> property.
+        The acl is taken from the node <b>ACL</b> property or the <b>msg.acl</b> property.
+        The content type is taken from the node <b>Content Type</b> property or the <b>msg.contentType</b> property.
+        The content encoding is taken from the node <b>Content Encoding</b> property or the <b>msg.contentEncoding</b> property.
+        The "Is Base64" is taken from the node <b>Is Base64</b> property or the <b>msg.isBase64</b> property.
+    </p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('Backblaze b2 put',{
+        category: 'storage-output',
+        color:"#e52d49",
+        defaults: {
+            b2: {type:"backblaze-b2-config",required:true},
+            bucket: {required:true},
+            filename: {value:""},
+            localFilename: {value:""},
+            contentType: {value: ""},
+            contentEncoding: {value: ""},
+            isBase64: {value: ""},
+            name: {value:""},
+            acl: {value: ""},
+            outputs: {value:1}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "Backblaze.png",
+        align: "right",
+        label: function() { 
+            return this.name ? this.name : this.bucket ? "b2 "+this.bucket : "b2";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+        oneditprepare: function() {
+            var that = this;
+            $( "#node-input-outputs" ).spinner({
+                min:0,
+                change: function(event, ui) {
+                    var value = this.value;
+                    if (!value.match(/^\d+$/)) { value = 1;  }
+                    else if (value < this.min) { value = this.min; }
+                    if (value !== this.value) { $(this).spinner("value", value); }
+                }
+            });
+        }
+
+    });
+</script>
+

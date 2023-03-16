@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/S-Flex/red-contrib-backblaze-b2#readme",
   "dependencies": {
+    "@types/node-red": "^1.2.1",
     "backblaze-b2": "^1.7.0"
   }
 }

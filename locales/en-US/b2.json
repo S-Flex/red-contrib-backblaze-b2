@@ -1,0 +1,52 @@
+{
+    "b2": {
+        "label": {
+            "b2": "Backblaze B2",
+            "bucket": "Bucket name",
+            "name": "Name",
+            "filename": "Filename",
+            "filenameDescription": "If this field is filled then msg.filename would be ignored and this value would be the default.",
+            "keyid": "KeyID",
+            "appid": "Application Key",
+            "path": "Path",
+            "outputas": "Output as",
+            "arraybuffer": "Array Buffer",
+            "blob": "Blob",
+            "document": "Document",
+            "json": "Json",
+            "text": "Text",
+            "stream": "Stream"
+        },
+        "placeholder": {
+            "bucket": "bucket name",
+            "name": "Name",
+            "filename": "Filename",
+            "path": "Path",
+            "local": "Local Filename"
+        },
+        "tip": {
+            "config1": "<p>To obtain these credentials, sign up to <a href='https://www.backblaze.com/'>Backblaze Web Services</a>, then click on App Keys in the My Account section to create an key</p>",
+            "filename": "Tip: Filename overwrites the provided filename. A previous node should provide msg.filename to not have a static filename. Also the full path needs to be included in the filename."
+        },
+        "status": {
+            "initializing": "initializing",
+            "ready": "ready",
+            "deleting": "deleting..."
+        },
+        "warn": {
+            "missing-config": "Missing Backblaze configuration"
+        },
+        "error": {
+            "auth-failed": "Failed to authenticate to B2 service",
+            "failed-to-fetch": "failed to fetch B2 state: __err__",
+            "no-bucket-specified": "No bucket specified. Not through config or msg.bucket",
+            "bucket-not-found": "No matching bucket found",
+            "no-filename-specified": "No filename specified",
+            "download-failed": "download failed: __err__",
+            "file-not-found": "File not found",
+            "delete-failed": "delete failed: __err__",
+            "upload-request-failed": "request for upload failed",
+            "upload-failed": "upload failed"
+        }
+    }
+}

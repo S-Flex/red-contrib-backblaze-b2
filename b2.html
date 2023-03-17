@@ -261,7 +261,12 @@
 </script>
 <script type="text/x-red" data-help-name="Backblaze b2 upload">
     <p>
-        ...
+        Backblaze b2 upload node uploads content to a Backblaze b2 bucket. 
+        The bucket name can be specified in the <b>bucket</b> property or in the <b>msg.bucket</b> property. 
+        The name of the file to download is taken from the <b>filename</b> property or the <b>msg.filename</b> property. 
+        The content of the file is taken from the <b>msg.payload</b> property and should be a buffer, arraybuffer, blob, 
+        document or stream. The upload info is send through <b>msg.payload</b> as an object. If the upload fails 
+        <b>msg.error</b> will contain an error object.
     </p>
 </script>
 <script type="text/javascript">

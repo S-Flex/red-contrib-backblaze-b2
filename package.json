@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "A Node-RED node to watch, save and retreive files from an Backblaze B2 bucket",
   "node-red": {
+    "version": ">=3.0.0",
     "nodes": {
       "backblaze b2": "b2.js"
     }
@@ -25,5 +26,8 @@
   "dependencies": {
     "@types/node-red": "^1.2.1",
     "backblaze-b2": "^1.7.0"
+  },
+  "engines": {
+    "node": ">=12.0.0"
   }
 }

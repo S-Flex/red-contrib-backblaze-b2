@@ -1,0 +1,95 @@
+[
+    {
+        "id": "2f78d30956b1cf38",
+        "type": "inject",
+        "z": "fe367e8462e86d7c",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 90,
+        "y": 400,
+        "wires": [
+            [
+                "e961f6ee84aec201"
+            ]
+        ]
+    },
+    {
+        "id": "5c27828a3a2089c1",
+        "type": "function",
+        "z": "fe367e8462e86d7c",
+        "name": "Create file buffer",
+        "func": "// get amount of files in root directory from the previous list results\nconst amountOfFilesInRoot = msg.payload.length;\n\n// create file contents\nconst textFileContent = `There are ${amountOfFilesInRoot} files in the root directory`;\n\n// make a buffer from the text\nmsg.payload = Buffer.from(textFileContent, 'utf-8');\n\n// get the date and generate a unique file name\nconst date = new Date();\nconst dateString = date.toISOString();\n\nmsg.filename = `report-${dateString}-${date.getMilliseconds()}.txt`;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 400,
+        "wires": [
+            [
+                "1d1e785abde1f66e"
+            ]
+        ]
+    },
+    {
+        "id": "1d1e785abde1f66e",
+        "type": "Backblaze b2 upload",
+        "z": "fe367e8462e86d7c",
+        "b2": "",
+        "bucket": "example",
+        "filename": "",
+        "name": "upload report file",
+        "x": 830,
+        "y": 400,
+        "wires": [
+            [
+                "8ecebc9a8187545b"
+            ]
+        ]
+    },
+    {
+        "id": "8ecebc9a8187545b",
+        "type": "debug",
+        "z": "fe367e8462e86d7c",
+        "name": "Log results",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "e961f6ee84aec201",
+        "type": "Backblaze b2 list",
+        "z": "fe367e8462e86d7c",
+        "b2": "",
+        "bucket": "example",
+        "name": "get files list in root directory",
+        "path": "",
+        "x": 320,
+        "y": 400,
+        "wires": [
+            [
+                "5c27828a3a2089c1"
+            ]
+        ]
+    }
+]

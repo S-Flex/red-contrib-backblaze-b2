@@ -1,0 +1,100 @@
+[
+    {
+        "id": "2c8a0a2716060361",
+        "type": "inject",
+        "z": "8a92a9627b5e2eab",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 90,
+        "y": 300,
+        "wires": [
+            [
+                "d9d324676e86139d"
+            ]
+        ]
+    },
+    {
+        "id": "ae89fb19394e17fa",
+        "type": "Backblaze b2 download",
+        "z": "8a92a9627b5e2eab",
+        "b2": "",
+        "bucket": "example-bucket",
+        "filename": "",
+        "name": "Get report file",
+        "format": "text",
+        "x": 760,
+        "y": 300,
+        "wires": [
+            [
+                "84c4d1983e554c95"
+            ]
+        ]
+    },
+    {
+        "id": "d9d324676e86139d",
+        "type": "Backblaze b2 list",
+        "z": "8a92a9627b5e2eab",
+        "b2": "",
+        "bucket": "example-bucket",
+        "name": "get files in root directory",
+        "path": "",
+        "x": 310,
+        "y": 300,
+        "wires": [
+            [
+                "69ccea87b6a821c2"
+            ]
+        ]
+    },
+    {
+        "id": "84c4d1983e554c95",
+        "type": "debug",
+        "z": "8a92a9627b5e2eab",
+        "name": "Log latest report file",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 980,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "69ccea87b6a821c2",
+        "type": "function",
+        "z": "8a92a9627b5e2eab",
+        "name": "Get latest report file",
+        "func": "let logArr = msg.payload;\n\nconst latestReportFile = logArr.filter(name => name.indexOf('report') === 0).sort().reverse()[0];\n\nmsg.filename = latestReportFile;\nmsg.payload = null;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 300,
+        "wires": [
+            [
+                "ae89fb19394e17fa"
+            ]
+        ]
+    }
+]

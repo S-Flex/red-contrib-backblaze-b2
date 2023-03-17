@@ -1,8 +1,16 @@
 [
     {
-        "id": "2f78d30956b1cf38",
+        "id": "8a92a9627b5e2eab",
+        "type": "tab",
+        "label": "example",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "056dd9c2a86097ee",
         "type": "inject",
-        "z": "fe367e8462e86d7c",
+        "z": "8a92a9627b5e2eab",
         "name": "Start",
         "props": [
             {
@@ -17,17 +25,17 @@
         "payload": "",
         "payloadType": "str",
         "x": 90,
-        "y": 400,
+        "y": 60,
         "wires": [
             [
-                "e961f6ee84aec201"
+                "b65e96fd7d54936d"
             ]
         ]
     },
     {
-        "id": "5c27828a3a2089c1",
+        "id": "154faaf5c49472ff",
         "type": "function",
-        "z": "fe367e8462e86d7c",
+        "z": "8a92a9627b5e2eab",
         "name": "Create file buffer",
         "func": "// get amount of files in root directory from the previous list results\nconst amountOfFilesInRoot = msg.payload.length;\n\n// create file contents\nconst textFileContent = `There are ${amountOfFilesInRoot} files in the root directory`;\n\n// make a buffer from the text\nmsg.payload = Buffer.from(textFileContent, 'utf-8');\n\n// get the date and generate a unique file name\nconst date = new Date();\nconst dateString = date.toISOString();\n\nmsg.filename = `report-${dateString}-${date.getMilliseconds()}.txt`;\n\nreturn msg;",
         "outputs": 1,
@@ -36,33 +44,33 @@
         "finalize": "",
         "libs": [],
         "x": 590,
-        "y": 400,
+        "y": 60,
         "wires": [
             [
-                "1d1e785abde1f66e"
+                "83e4b6d6c1a80483"
             ]
         ]
     },
     {
-        "id": "1d1e785abde1f66e",
+        "id": "83e4b6d6c1a80483",
         "type": "Backblaze b2 upload",
-        "z": "fe367e8462e86d7c",
+        "z": "8a92a9627b5e2eab",
         "b2": "",
-        "bucket": "example",
+        "bucket": "example-bucket",
         "filename": "",
         "name": "upload report file",
         "x": 830,
-        "y": 400,
+        "y": 60,
         "wires": [
             [
-                "8ecebc9a8187545b"
+                "5fc471b687604f6e"
             ]
         ]
     },
     {
-        "id": "8ecebc9a8187545b",
+        "id": "5fc471b687604f6e",
         "type": "debug",
-        "z": "fe367e8462e86d7c",
+        "z": "8a92a9627b5e2eab",
         "name": "Log results",
         "active": true,
         "tosidebar": true,
@@ -73,22 +81,22 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1050,
-        "y": 400,
+        "y": 60,
         "wires": []
     },
     {
-        "id": "e961f6ee84aec201",
+        "id": "b65e96fd7d54936d",
         "type": "Backblaze b2 list",
-        "z": "fe367e8462e86d7c",
+        "z": "8a92a9627b5e2eab",
         "b2": "",
-        "bucket": "example",
+        "bucket": "example-bucket",
         "name": "get files list in root directory",
         "path": "",
         "x": 320,
-        "y": 400,
+        "y": 60,
         "wires": [
             [
-                "5c27828a3a2089c1"
+                "154faaf5c49472ff"
             ]
         ]
     }

@@ -1,0 +1,137 @@
+[
+    {
+        "id": "0e1cee8e24b38ee7",
+        "type": "inject",
+        "z": "8a92a9627b5e2eab",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 97,
+        "y": 421,
+        "wires": [
+            [
+                "dcdd5b371e412513"
+            ]
+        ]
+    },
+    {
+        "id": "dcdd5b371e412513",
+        "type": "Backblaze b2 list",
+        "z": "8a92a9627b5e2eab",
+        "b2": "",
+        "bucket": "example-bucket",
+        "name": "get files in root directory",
+        "path": "",
+        "x": 317,
+        "y": 421,
+        "wires": [
+            [
+                "c150627cadd7e361"
+            ]
+        ]
+    },
+    {
+        "id": "c150627cadd7e361",
+        "type": "function",
+        "z": "8a92a9627b5e2eab",
+        "name": "filter report files",
+        "func": "msg.payload = msg.payload.filter(name => name.indexOf('report') === 0);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 520,
+        "wires": [
+            [
+                "4b7410e51f05a4bf"
+            ]
+        ]
+    },
+    {
+        "id": "4b7410e51f05a4bf",
+        "type": "split",
+        "z": "8a92a9627b5e2eab",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 490,
+        "y": 520,
+        "wires": [
+            [
+                "d890340dcff9a348"
+            ]
+        ]
+    },
+    {
+        "id": "db9fc187e9468fae",
+        "type": "Backblaze b2 delete",
+        "z": "8a92a9627b5e2eab",
+        "b2": "",
+        "bucket": "example-bucket",
+        "filename": "",
+        "name": "delete report file",
+        "format": "",
+        "x": 760,
+        "y": 420,
+        "wires": [
+            [
+                "fd91edeb013f4ff2"
+            ]
+        ]
+    },
+    {
+        "id": "fd91edeb013f4ff2",
+        "type": "debug",
+        "z": "8a92a9627b5e2eab",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "d890340dcff9a348",
+        "type": "function",
+        "z": "8a92a9627b5e2eab",
+        "name": "msg.filename = msg.payload",
+        "func": "msg.filename = msg.payload;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 520,
+        "wires": [
+            [
+                "db9fc187e9468fae"
+            ]
+        ]
+    }
+]

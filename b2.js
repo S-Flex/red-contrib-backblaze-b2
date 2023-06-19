@@ -37,8 +37,6 @@ module.exports = function(RED) {
             return;
         }
 
-        node.status({fill:"blue",shape:"dot",text:"b2.status.initializing"});
-
         return node;
     }
 
@@ -48,12 +46,14 @@ module.exports = function(RED) {
 
         const node = setupNode(this, n);
 
-        this.b2Config.b2.authorize()
-            .then(async () => {
-                node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
+        this.on("input", async (msg, send, done) => {
 
-                this.on("input", async (msg, send, done) => {
-                    
+            node.status({fill:"blue",shape:"dot",text:"b2.status.initializing"});
+            
+            this.b2Config.b2.authorize()
+                .then(async () => {
+                    node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
+
                     // define variables
                     const path = n.path || msg.payload || "";
                     const bucket = n.bucket || msg.bucket;
@@ -99,8 +99,8 @@ module.exports = function(RED) {
                         done();
                     });
                 })
+                .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
             })
-            .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
     }
     RED.nodes.registerType("Backblaze b2 list", BackBlazeB2listNode);
 
@@ -109,12 +109,12 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,n);
 
         const node = setupNode(this, n);
+        
+        this.on("input", async (msg, send, done) => {
 
-        this.b2Config.b2.authorize()
-            .then(async () => {
-                node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
-
-                this.on("input", async (msg, send, done) => {
+            this.b2Config.b2.authorize()
+                .then(async () => {
+                    node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
 
                     const bucket = n.bucket || msg.bucket;
                     if(!bucket) {
@@ -142,9 +142,9 @@ module.exports = function(RED) {
                         send(msg);
                         done();
                     });
-                });
-            })
-            .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
+                })
+                .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
+        });
     }
     RED.nodes.registerType("Backblaze b2 download", BackblazeB2DownloadNode)
 
@@ -154,11 +154,11 @@ module.exports = function(RED) {
 
         const node = setupNode(this, n);
 
-        this.b2Config.b2.authorize()
-            .then(async () => {
-                node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
+        this.on("input", async (msg, send, done) => {
 
-                this.on("input", async (msg, send, done) => {
+            this.b2Config.b2.authorize()
+                .then(async () => {
+                    node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
 
                     // define variables
                     const filename = n.filename || (typeof msg.filename === 'string' ? msg.filename : "");
@@ -228,9 +228,9 @@ module.exports = function(RED) {
 
                         done();
                     });
-                });
-            })
-            .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
+                })
+                .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
+        });
     }
     RED.nodes.registerType("Backblaze b2 delete", BackblazeB2DeleteNode)
 
@@ -240,11 +240,11 @@ module.exports = function(RED) {
 
         const node = setupNode(this, n);
 
-        this.b2Config.b2.authorize()
-            .then(async () => {
-                node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
+        this.on("input", async (msg, send, done) => {
 
-                this.on("input", async (msg, send, done) => {
+            this.b2Config.b2.authorize()
+                .then(async () => {
+                    node.status({fill:"green",shape:"dot",text:"b2.status.ready"})
 
                     const filename = n.filename || (typeof msg.filename === 'string' ? msg.filename : "");
                     const file = msg.payload;
@@ -300,10 +300,8 @@ module.exports = function(RED) {
                     send(msg);
 
                 })
-            })
-            .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
-
-        
+                .catch(() => node.status({fill:"red",shape:"ring",text:"b2.error.auth-failed"}));
+        });
     }
     RED.nodes.registerType("Backblaze b2 upload", BackBlazeB2UploadNode);
 

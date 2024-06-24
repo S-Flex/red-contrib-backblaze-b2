@@ -280,12 +280,16 @@ module.exports = function(RED) {
                         return;
                     };
 
-                    const upload = await this.b2Config.b2.uploadFile({
+                    const fileUpload = {
                         uploadUrl: uploadUrl.data.uploadUrl,
                         uploadAuthToken: uploadUrl.data.authorizationToken,
                         fileName: filename,
                         data: file
-                    }).catch(() => {});
+                    };
+
+                    const upload = await this.b2Config.b2.uploadFile(fileUpload).catch((error) => {
+                        node.error(error ? error.toString() : 'uploader failed with: ' + JSON.stringify(fileUpload))
+                    });
 
                     if(!upload) {
                         node.status({fill:"red",shape:"ring",text:"b2.error.upload-failed"});

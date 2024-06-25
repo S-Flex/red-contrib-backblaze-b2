@@ -291,7 +291,7 @@ module.exports = function(RED) {
                     //     node.error(error ? error.toString() : 'uploader failed with: ' + JSON.stringify(fileUpload))
                     // });
 
-                    const upload = await uploadWithRetries(fileUpload).catch((error) => {
+                    const upload = await uploadWithRetries(fileUpload, this.b2Config.b2.uploadFile).catch((error) => {
                         node.error(error)
                     });
 
@@ -316,9 +316,9 @@ module.exports = function(RED) {
     const MAX_RETRIES = 3; // Set the maximum number of retries
     const RETRY_DELAY_MS = 1000; // Initial delay in milliseconds
 
-    async function uploadWithRetries(fileUpload, retries = 0) {
+    async function uploadWithRetries(fileUpload, uploader, retries = 0) {
         try {
-            const upload = await this.b2Config.b2.uploadFile(fileUpload);
+            const upload = await uploader(fileUpload);
             return upload.data;
         } catch (error) {
             if (retries < MAX_RETRIES) {

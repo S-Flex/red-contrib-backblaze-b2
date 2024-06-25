@@ -287,8 +287,12 @@ module.exports = function(RED) {
                         data: file
                     };
 
-                    const upload = await this.b2Config.b2.uploadFile(fileUpload).catch((error) => {
-                        node.error(error ? error.toString() : 'uploader failed with: ' + JSON.stringify(fileUpload))
+                    // const upload = await this.b2Config.b2.uploadFile(fileUpload).catch((error) => {
+                    //     node.error(error ? error.toString() : 'uploader failed with: ' + JSON.stringify(fileUpload))
+                    // });
+
+                    const upload = await uploadWithRetries(fileUpload).catch((error) => {
+                        node.error(error)
                     });
 
                     if(!upload) {
@@ -299,7 +303,7 @@ module.exports = function(RED) {
                         return;
                     }
 
-                    msg.payload = upload.data;
+                    msg.payload = upload;
 
                     send(msg);
 
@@ -308,5 +312,23 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType("Backblaze b2 upload", BackBlazeB2UploadNode);
+
+    const MAX_RETRIES = 3; // Set the maximum number of retries
+    const RETRY_DELAY_MS = 1000; // Initial delay in milliseconds
+
+    async function uploadWithRetries(fileUpload, reties = 0) {
+        try {
+            const upload = await this.b2Config.b2.uploadFile(fileUpload);
+            return upload.data;
+        } catch (error) {
+            if (retries < MAX_RETRIES) {
+                console.error(`Upload failed (attempt ${retries + 1}): ${error}`);
+                await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+                return uploadWithRetries(fileUpload, retries + 1);
+            } else {
+                throw new Error(`Max retries reached. Upload failed: ${error}`);
+            }
+        }
+    }
 
 }

@@ -316,7 +316,7 @@ module.exports = function(RED) {
     const MAX_RETRIES = 3; // Set the maximum number of retries
     const RETRY_DELAY_MS = 1000; // Initial delay in milliseconds
 
-    async function uploadWithRetries(fileUpload, reties = 0) {
+    async function uploadWithRetries(fileUpload, retries = 0) {
         try {
             const upload = await this.b2Config.b2.uploadFile(fileUpload);
             return upload.data;

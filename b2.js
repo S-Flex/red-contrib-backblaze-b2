@@ -324,7 +324,7 @@ module.exports = function(RED) {
             if (retries < MAX_RETRIES) {
                 console.error(`Upload failed (attempt ${retries + 1}): ${error}`);
                 await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
-                return uploadWithRetries(fileUpload, retries + 1);
+                return uploadWithRetries(fileUpload, uploader, retries + 1);
             } else {
                 throw new Error(`Max retries reached. Upload failed: ${error}`);
             }

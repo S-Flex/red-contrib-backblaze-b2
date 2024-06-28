@@ -313,7 +313,7 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType("Backblaze b2 upload", BackBlazeB2UploadNode);
 
-    const MAX_RETRIES = 3; // Set the maximum number of retries
+    const MAX_RETRIES = 10; // Set the maximum number of retries
     const RETRY_DELAY_MS = 1000; // Initial delay in milliseconds
 
     async function uploadWithRetries(fileUpload, uploader, retries = 0) {
@@ -326,7 +326,8 @@ module.exports = function(RED) {
                 await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
                 return uploadWithRetries(fileUpload, uploader, retries + 1);
             } else {
-                throw new Error(`Max retries reached. Upload failed: ${error}`);
+                console.error(`Max retries reached. Upload failed: ${error}`);
+                throw error;
             }
         }
     }
